@@ -8,7 +8,7 @@ import Stack from '@mui/joy/Stack';
 import Input from '@mui/joy/Input';
 import { useState, useEffect, useRef } from 'react';
 import { toKana, isKana } from 'wanakana';
-// import Search from '@mui/icons-material/Search';
+import Search from '@mui/icons-material/Search';
 
 function SearchBar({ onSearch }) {
   const [value, setValue] = useState('');
@@ -58,8 +58,8 @@ function SearchBar({ onSearch }) {
           </Button>
         )}
         endDecorator={(
-          <Button variant="soft" color="plain" type="submit">
-            Search
+          <Button variant="plain" type="submit">
+            <Search />
           </Button>
         )}
       />
