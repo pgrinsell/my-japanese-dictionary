@@ -9,6 +9,8 @@ import Input from '@mui/joy/Input';
 import { useState, useEffect, useRef } from 'react';
 import { toKana, isKana } from 'wanakana';
 import Search from '@mui/icons-material/Search';
+import data from './data.json';
+import parse from 'html-react-parser';
 
 function SearchBar({ onSearch }) {
   const [value, setValue] = useState('');
@@ -67,13 +69,25 @@ function SearchBar({ onSearch }) {
   );
 }
 
+function handleAddFuriGana(text) {
+  // todo replace the whole block between perenthesis to avoid orphaned tags
+
+  const processedText = text
+    .replaceAll('(', '<rt>')
+    .replaceAll(')', '</rt>');
+
+  return parse(`<ruby>${processedText}</ruby>`);
+}
+
 function App() {
   const [search, setSearch] = useState('');
   const [results, setResults] = useState([]);
 
   useEffect(() => {
     if (Boolean(search)) {
-      setResults([search, ...results]);
+      // setResults([search, ...results]);
+      // todo implement more complex search
+      setResults(data.filter(({ en }) => en === search));
     }
   }, [search]);
 
@@ -84,7 +98,15 @@ function App() {
         <SearchBar onSearch={value => setSearch(value)} />
         {results.length > 0 ? results.map((result, i) => (
           <Card key={i}>
-            <Typography>{result}</Typography>
+            <Typography>
+              {handleAddFuriGana(result.jp)}
+            </Typography>
+            <Typography>
+              {result.en}
+            </Typography>
+            <Typography>
+              {result.type}
+            </Typography>
           </Card>
         )) : (
           <>
