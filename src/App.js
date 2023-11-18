@@ -5,89 +5,54 @@ import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
-import Input from '@mui/joy/Input';
-import { useState, useEffect, useRef } from 'react';
-import { toKana, isKana } from 'wanakana';
-import Search from '@mui/icons-material/Search';
+import { useState, useEffect } from 'react';
 import data from './data.json';
 import parse from 'html-react-parser';
+import Grid from '@mui/joy/Grid';
+import SearchBar from './SearchBar';
 
-function SearchBar({ onSearch }) {
-  const [value, setValue] = useState('');
-  const [mode, setMode] = useState('en');
-  const ref = useRef();
+// function handleAddFuriGana(text) {
+//   // todo replace the whole block between perenthesis to avoid orphaned tags
+//   return parse(`<ruby>${text.replaceAll('(', '<rt>').replaceAll(')', '</rt>')}</ruby>`);
+// }
 
-  function handleSetValue(newValue) {
-    console.log(`isKana: ${isKana(newValue)}`);
-
-    if (mode === 'jp') {
-      const valueAsKana = toKana(newValue, { IMEMode: true });
-      setValue(valueAsKana);
-    } else {
-      setValue(newValue);
-    }
-  }
-  
-  function handleSearch(event) {
-    event.preventDefault();
-    onSearch(value);
-    setValue('');
-  }
-
-  function handleChangeMode() {
-    setMode(currentMode => currentMode === 'en' ? 'jp' : 'en');
-    setValue('');
-    ref.current.focus();
-  }
-
+function ResultCard({ en, kanji, kana }) {
   return (
-    <form onSubmit={handleSearch}>
-      <Input
-        slotProps={{ input: { ref } }}
-        size="lg"
-        variant="outlined"
-        placeholder="Search for a word or phrase..."
-        autoFocus
-        value={value}
-        onChange={e => handleSetValue(e.target.value)}
-        startDecorator={(
-          <Button
-            variant="soft"
-            // color="neutral"
-            onClick={e => handleChangeMode(e)}
-          >
-            {mode === 'en' ? 'EN -> JP' : 'JP -> EN'}
-          </Button>
-        )}
-        endDecorator={(
-          <Button variant="plain" type="submit">
-            <Search />
-          </Button>
-        )}
-      />
-    </form>
+    <Card>
+      <Grid container spacing={4}>
+        <Grid sx={{ width: 200 }}>
+          <Typography level="h2" sx={{ fontWeight: 'normal' }}>
+            {/* {handleAddFuriGana(result.jp)} */}
+            <ruby>
+              {kanji}
+              <rt>{kana}</rt>
+            </ruby>
+          </Typography>
+        </Grid>
+        <Grid>
+          <Typography>
+            {en}
+          </Typography>
+        </Grid>
+      </Grid>
+    </Card>
   );
 }
 
-function handleAddFuriGana(text) {
-  // todo replace the whole block between perenthesis to avoid orphaned tags
-
-  const processedText = text
-    .replaceAll('(', '<rt>')
-    .replaceAll(')', '</rt>');
-
-  return parse(`<ruby>${processedText}</ruby>`);
-}
-
 function App() {
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState({ value: '', mode: '' });
   const [results, setResults] = useState([]);
 
   useEffect(() => {
-    if (Boolean(search)) {
-      // setResults([search, ...results]);
-      // todo implement more complex search
-      setResults(data.filter(({ en }) => en === search));
+    const { value, mode } = search;
+
+    if (Boolean(value)) {
+      if (mode === 'en') {
+        // todo implement more complex search
+        setResults(data.filter(({ en }) => en.toLocaleLowerCase().includes(value.toLocaleLowerCase())));
+      } else if (mode === 'jp') {
+        setResults(data.filter(({ kanji, kana }) => kanji.includes(value) || kana.includes(value)));
+      }
     }
   }, [search]);
 
@@ -95,20 +60,15 @@ function App() {
     <CssVarsProvider>
       <CssBaseline />
       <Stack spacing={2} sx={{ m: 2 }}>
-        <SearchBar onSearch={value => setSearch(value)} />
-        {results.length > 0 ? results.map((result, i) => (
-          <Card key={i}>
-            <Typography>
-              {handleAddFuriGana(result.jp)}
-            </Typography>
-            <Typography>
-              {result.en}
-            </Typography>
-            <Typography>
-              {result.type}
-            </Typography>
-          </Card>
-        )) : (
+        <SearchBar onSearch={(value, mode) => setSearch({ value, mode })} />
+        {results.length > 0 && (
+          <>
+            {results.map((result, i) => (
+              <ResultCard key={i} {...result} />
+            ))}
+          </>
+        )}
+        {results.length === 0 && (
           <>
             <Typography>
               Search for a world or phrase using the input above. You can switch mode between English to Japanese and Japanese to English. Japanese to English mode supports Kana input.
