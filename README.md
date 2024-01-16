@@ -1,6 +1,13 @@
-# Getting Started with Create React App
+# My Japanese Dictionary
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a personal project which aims to overcome some ease of use issues I have with other dictionaries. My aim with this project is to create a dictionary which is quick to use and can be installed as a standalone app.
+
+For most users I recommend https://jisho.org/ because it is generally a much better app.
+
+Massive thanks the following projects which made this app possible:
+- https://www.edrdg.org/jmdict/j_jmdict.html
+- https://github.com/scriptin/jmdict-simplified
+- https://wanakana.com/
 
 ## Available Scripts
 

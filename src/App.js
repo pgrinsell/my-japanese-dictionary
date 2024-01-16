@@ -85,7 +85,7 @@ function App() {
   }, [results]);
 
   return (
-    <CssVarsProvider>
+    <CssVarsProvider defaultMode="system">
       <CssBaseline />
       <Stack spacing={2} sx={{ m: 2 }}>
         <SearchBar onSearch={(value, mode) => setSearch({ value, mode })} />
