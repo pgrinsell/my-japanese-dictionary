@@ -1,8 +1,8 @@
 import '@fontsource/inter';
 import Button from '@mui/joy/Button';
 import Input from '@mui/joy/Input';
-import { useState, useEffect, useRef } from 'react';
-import { toKana, isKana } from 'wanakana';
+import { useState, useRef } from 'react';
+import { toKana } from 'wanakana';
 import Search from '@mui/icons-material/Search';
 
 function SearchBar({ onSearch }) {

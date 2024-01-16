@@ -1,13 +1,10 @@
 import '@fontsource/inter';
 import { CssVarsProvider } from '@mui/joy/styles';
 import CssBaseline from '@mui/joy/CssBaseline';
-import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
 import { useState, useEffect } from 'react';
-// import data from './JMdict_e.json';
-// import parse from 'html-react-parser';
 import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import SearchBar from './SearchBar';
